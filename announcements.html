@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Announcements</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<nav class="navbar">
+  <div class="brand-title">North Park Announcements</div>
+  <span class="bar"></span>
+  <image class="brand-image" src="https://northpark.peelschools.org/images/logo.svg" onclick="location.href = '/home.html';"/>
+</nav>
+<body>
+  <div class="container">
+    <h1>Announcements</h1>
+    <form id="announcement-form">
+        <b><u><label for="announcement-text">Body</label></u></b>
+        <br>
+        <br>
+        <textarea id="announcement-text" name="announcement-text" class="txtinputannouncements"></textarea>
+      <br>
+        <br>
+        <u><label for="grade-select">Grade</label></u>
+        <br>
+        <br>
+          <input class ="checkbox" type="checkbox" name="Grade" value="9" onclick="return checkGradeTextbox('Grade');" checked><p class="checkboxtxt">9</p><br>  
+          <input class ="checkbox" type="checkbox" name="Grade" value="10" onclick="return checkGradeTextbox('Grade');"><p class="checkboxtxt">10</p><br>  
+          <input class ="checkbox" type="checkbox" name="Grade" value="11" onclick="return checkGradeTextbox('Grade');"><p class="checkboxtxt">11</p><br>
+          <input class ="checkbox" type="checkbox" name="Grade" value="12" onclick="return checkGradeTextbox('Grade');"><p class="checkboxtxt">12</p><br>
+        <br>
+        <u><label for="subject-select">Subject</label></u>
+        <br>
+        <br>
+          <input class ="checkbox" type="checkbox" name="Subject" value="Hack Club" onclick="return checkGradeTextbox('Subject');"><p class="checkboxtxt">Hack Club</p><br>  
+          <input class ="checkbox" type="checkbox" name="Subject" value="DECA" onclick="return checkGradeTextbox('Subject');"><p class="checkboxtxt">DECA</p><br>  
+          <input class ="checkbox" type="checkbox" name="Subject" value="HOSA" onclick="return checkGradeTextbox('Subject');"><p class="checkboxtxt">HOSA</p><br>
+          <input class ="checkbox" type="checkbox" name="Subject" value="Misc" onclick="return checkGradeTextbox('Subject');" checked><p class="checkboxtxt">Misc</p><br>
+          <br>
+          <u><label for="importance-select">Importance</label></u>
+         <br>
+         <br>
+        <select id="importance-select" name="importance" class="form-control">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <br>
+        <br>
+      <button type="submit" class="button">Submit</button>
+    </form>
+  </div>
+  <div>
+    <script>
+        function checkGradeTextbox(NAME) {
+          var checkboxes = document.getElementsByName(NAME);
+          var numberOfCheckedItems = 0;
+          for(var i = 0; i < checkboxes.length; i++)  {  
+            if (checkboxes[i].checked) {  
+              numberOfCheckedItems++;  
+              if (numberOfCheckedItems < 2 && NAME === 'Grade') {
+                gradeSelect = checkboxes[i].value
+              } else (numberOfCheckedItems < 2 && NAME === 'Subject'); {
+                subjectSelect = checkboxes[i].value
+              }
+            }
+          } if (numberOfCheckedItems > 1)  {  
+              alert("Please only select one");  
+              return false;  
+          }  
+        } 
+
+        // Form element for inputting announcement information
+        const form = document.getElementById("announcement-form");
+
+        // Select elements for grade, subject, and importance options
+        var gradeSelect = '9'
+        var subjectSelect = 'Misc'
+        const importanceSelect = document.getElementById("importance-select");
+
+        // Array to store announcements in local storage
+        let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+
+        // Function to handle form submission
+        const handleFormSubmit = (event) => {
+            event.preventDefault();
+
+        // Get user input from form elements
+        const announcementText = form.elements["announcement-text"].value;
+        const grade = gradeSelect;
+        const subject = subjectSelect;
+        const importance = importanceSelect.value;
+
+        // Create announcement object
+        const announcement = {
+            text: announcementText,
+            grade: grade,
+            subject: subject,
+            importance: importance
+        };
+
+        // Add announcement to array
+        announcements.push(announcement);
+
+        // Store announcements array in local storage
+        localStorage.setItem("announcements", JSON.stringify(announcements));
+
+        // Clear form input
+        form.reset();
+        };
+
+        // Add event listener to form to handle submission
+        form.addEventListener("submit", handleFormSubmit);
+    </script>
+  </div>
+</body>
+</html>

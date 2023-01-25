@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Announcements</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<nav class="navbar">
+  <div class="brand-title">North Park Announcements</div>
+  <span class="bar"></span>
+  <image class="brand-image" src="https://northpark.peelschools.org/images/logo.svg" onclick="location.href = '/home.html';"/>
+</nav>
+<body>
+  <div class="container">
+    <h1>Student Announcements</h1>
+    <div class="form-group">
+      <label for="search-text">Search:</label>
+      <input type="text" id="search-text" name="search-text" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="grade-select">Grade:</label>
+      <select id="grade-select" name="grade" class="form-control">
+        <option value="all">All</option>
+        <option value="9th">9th Grade</option>
+        <option value="10th">11th Grade</option>
+        <option value="11th">12th Grade</option>
+        <!-- Add more options for grades -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="subject-select">Subject:</label>
+      <select id="subject-select" name="subject" class="form-control">
+        <option value="all">All</option>
+        <option value="Hack Club">Hack Club</option>
+        <option value="DECA">DECA</option>
+        <option value="HOSA">HOSA</option>
+        <!-- Add more options for subjects -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="importance-select">Importance:</label>
+      <select id="importance-select" name="importance" class="form-control">
+        <option value="all">All</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+    <br>
+    <hr class="hr-text">
+    <br>
+    <div id="announcements"></div>
+  </div>
+  <script>
+    // Get announcements from local storage
+    let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+  
+    // Get elements for search, grade, subject, and importance filters
+    const searchText = document.getElementById("search-text");
+    const gradeSelect = document.getElementById("grade-select");
+    const subjectSelect = document.getElementById("subject-select");
+    const importanceSelect = document.getElementById("importance-select");
+    const announcementsDiv = document.getElementById("announcements");
+  
+    // Function to filter announcements based on user input
+    const filterAnnouncements = () => {
+      let filteredAnnouncements = announcements;
+  
+      // Get user input from filters
+      const search = searchText.value.toLowerCase();
+      const grade = gradeSelect.value;
+      const subject = subjectSelect.value;
+      const importance = importanceSelect.value;
+  
+      // Filter announcements by search text
+      if (search.length > 0) {
+        filteredAnnouncements = filteredAnnouncements.filter((announcement) => {
+          return announcement.text.toLowerCase().includes(search);
+        });
+      }
+      // filter announcements by grade
+      if (grade !== "all") {
+        filteredAnnouncements = filteredAnnouncements.filter((announcement) => {
+          return announcement.grade === grade;
+        });
+      }
+      // filter announcements by subject
+      if (subject !== "all") {
+        filteredAnnouncements = filteredAnnouncements.filter((announcement) => {
+          return announcement.subject === subject;
+        });
+      }
+      // filter announcements by importance
+      if (importance !== "all") {
+        filteredAnnouncements = filteredAnnouncements.filter((announcement) => {
+          return announcement.importance === importance;
+        });
+      }
+  
+      // Clear current announcements from the view
+      announcementsDiv.innerHTML = "";
+  
+      // Display filtered announcements
+      filteredAnnouncements.forEach((announcement) => {
+        const announcementElem = document.createElement("p");
+        announcementElem.innerHTML = `<div class="card"><div style="text-align:left"> <strong>Grade:</strong> ${announcement.grade} <br> <strong>Subject:</strong> ${announcement.subject} <br> <strong>Importance:</strong> ${announcement.importance} <br> <br> ${announcement.text} </div></div>`;
+        announcementsDiv.appendChild(announcementElem);
+        });
+    }
+
+        // Set event listeners on filter elements to call filterAnnouncements when user changes an input
+        searchText.addEventListener("input", filterAnnouncements);
+        gradeSelect.addEventListener("change", filterAnnouncements);
+        subjectSelect.addEventListener("change", filterAnnouncements);
+        importanceSelect.addEventListener("change", filterAnnouncements);
+
+        // Call filterAnnouncements initially to display all announcements
+        filterAnnouncements();
+</script>
